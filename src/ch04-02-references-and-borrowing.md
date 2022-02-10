@@ -379,7 +379,7 @@ let r2 = &mut s;
 ```
 
 <!--
-A similar rule exists for combining mutable and immutable references. This code
+Rust enforces a similar rule for combining mutable and immutable references. This code
 results in an error:
 -->
 
@@ -394,6 +394,10 @@ let mut s = String::from("hello");
 let r1 = &s; // no problem
 let r2 = &s; // no problem
 let r3 = &mut s; // BIG PROBLEM
+-->
+
+<!--
+println!("{}, {}, and {}", r1, r2, r3);
 ```
 -->
 
@@ -403,6 +407,8 @@ let mut s = String::from("hello");
 let r1 = &s; // 問題なし
 let r2 = &s; // 問題なし
 let r3 = &mut s; // 大問題！
+
+println!("{}, {}, and {}", r1, r2, r3);
 ```
 
 <!--
@@ -422,8 +428,11 @@ immutable
 5 |     let r2 = &s; // no problem
 6 |     let r3 = &mut s; // BIG PROBLEM
   |                   ^ mutable borrow occurs here
-7 | }
-  | - immutable borrow ends here
+7 | 
+8 |     println!("{}, {}, and {}", r1, r2, r3);
+  |                                -- immutable borrow later used here
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` due to previous error
 ```
 
 <!--
